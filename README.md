@@ -76,4 +76,4 @@ The project requires the installation of following packages and their dependenci
 
 ## Contact
 
-Email: [pei.zhang.19@ucl.ac.uk]()
+Email: pei.zhang.19@ucl.ac.uk
