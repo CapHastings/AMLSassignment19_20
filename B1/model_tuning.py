@@ -5,9 +5,10 @@ from sklearn.metrics import accuracy_score
 from B1 import data_preprocess
 
 
-# Select and fine-tune a Random Forests model.
 def tune_model(X_train, y_train, X_val, y_val):
     """
+    # Fine-tune a Random Forests model.
+
     :param X_train: The predictors in training set.
     :param y_train: The labels in training set.
     :param X_val: The predictors in validation set.
@@ -16,7 +17,7 @@ def tune_model(X_train, y_train, X_val, y_val):
     """
     best_acc = 0
     best_model = None
-    for n_estimators in range(10, 150, 10):
+    for n_estimators in range(50, 160, 10):
         rfc = RandomForestClassifier(n_estimators=n_estimators, n_jobs=-1, random_state=42)
         folds = int(len(X_train) / len(X_val))
         acc_list = []
@@ -39,9 +40,10 @@ def tune_model(X_train, y_train, X_val, y_val):
     return best_model
 
 
-# Measure the accuracy on training set.
 def measure_acc_train(model, X_train, y_train):
     """
+    Measure the accuracy on training set.
+
     :param model: The model with fine-tuned parameters that has not been fit on any data.
     :param X_train: The predictors in training set.
     :param y_train: The labels in training set.
@@ -52,9 +54,10 @@ def measure_acc_train(model, X_train, y_train):
     return round(acc_train, 2)
 
 
-# Measure the accuracy on test set.
 def measure_acc_test(model, X_test, y_test):
     """
+    Measure the accuracy on test set.
+
     :param model: The model with fine-tuned parameters and has been fit on training set.
     :param X_test: The predictors in test set.
     :param y_test: The labels in test set.

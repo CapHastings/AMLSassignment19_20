@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 
 
-# Resize the width of an image and its height in proportion.
 def resize_image(resized_width, img):
     """
+    Resize the width of an image and its height in proportion.
+
     :param resized_width: The width of an image after being resized.
     :param img: An Image object.
     :return: The Image object resized.
@@ -16,9 +17,10 @@ def resize_image(resized_width, img):
     return img
 
 
-# Converts an image to an array stored as a DataFrame.
 def image_to_px(img):
     """
+    Converts an image to an array stored as a DataFrame.
+
     :param img: An Image object.
     :return: The numeric representation of an image stored as a DataFrame.
     """
@@ -26,25 +28,31 @@ def image_to_px(img):
     return px
 
 
-# Crop the face just at "chin" position, and export these "chin" images as predictors.
-def chin_crop():
+def face_crop():
+    """
+    Crop the face just at "right" position, and export these cropped images as predictors.
+
+    :return: a DataFrame including all predictors.
+    """
     img_source = '../Datasets/cartoon_set/img/'
     img_suffix = '.png'
     save_path = '../Datasets/cartoon_set_b1/predictors_chin.csv'
     px = pd.DataFrame()
     for i in range(10000):
         img = Image.open(img_source + str(i) + img_suffix)
-        img = img.crop((150, 300, 350, 390))
+        img = img.crop((150, 280, 350, 360))
         img = resize_image(30, img)
+        img = img.convert('L')
         img_px = image_to_px(img)
         px = px.append(img_px, ignore_index=True)
     px.to_csv(save_path, index=False)
-    return 0
+    return px
 
 
-# Load predictors and labels from .csv file.
 def load_data():
     """
+    Load predictors and labels from .csv file.
+
     :return: All predictors and labels in a dataset.
     """
     predictors_path = 'Datasets/cartoon_set_b1/predictors_chin.csv'
@@ -54,9 +62,10 @@ def load_data():
     return predictors, labels
 
 
-# Split the dataset as training set, validation set and test set in given ratio.
 def train_val_test_split(predictors, labels, test_ratio, val_ratio):
     """
+    Split the dataset as training set, validation set and test set in given ratio.
+
     :param predictors: All predictors in a dataset.
     :param labels: All labels in a dataset.
     :param test_ratio: The ratio of test set to the whole dataset.
@@ -81,9 +90,10 @@ def train_val_test_split(predictors, labels, test_ratio, val_ratio):
     return [X_train, y_train], [X_val, y_val], [X_test, y_test]
 
 
-# Rearrange new training set and validation set for each cross-validation.
 def create_cvset(X_train, y_train, X_val, y_val, folds, i):
     """
+    Rearrange new training set and validation set for each cross-validation.
+
     :param X_train: Predictors in training set.
     :param y_train: Labels in training set.
     :param X_val: Predictors in validation set.
