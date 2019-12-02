@@ -5,9 +5,10 @@ from sklearn.linear_model import LogisticRegression
 from A1 import data_preprocess
 
 
-# Select and fine-tune a Logistic Regression model.
 def tune_model(X_train, y_train, X_val, y_val):
     """
+    Fine-tune a Logistic Regression model using cross-validation.
+
     :param X_train: The predictors in training set.
     :param y_train: The labels in training set.
     :param X_val: The predictors in validation set.
@@ -16,11 +17,13 @@ def tune_model(X_train, y_train, X_val, y_val):
     """
     best_acc = 0
     best_model = None
-    for C in [0.01, 0.05, 0.1, 0.15, 0.2, 0.25]:
+    C_list = [0.005, 0.010, 0.015, 0.020, 0.025, 0.030, 0.035]
+    for C in C_list:
         lr = LogisticRegression(penalty='l2', C=C, solver='liblinear', max_iter=300, random_state=42)
-        folds = 4  # 4-folds cross-validation.
+        folds = 10  # 10-folds cross-validation.
         acc_list = []
         for i in range(folds):
+            # yield a new training set and a new validation set.
             X_train_cv, y_train_cv, X_val_cv, y_val_cv = data_preprocess.create_cvset(X_train,
                                                                                       y_train,
                                                                                       X_val,
@@ -39,9 +42,10 @@ def tune_model(X_train, y_train, X_val, y_val):
     return best_model
 
 
-# Measure the accuracy on training set.
 def measure_acc_train(model, X_train, y_train):
     """
+    Measure the accuracy on training set.
+
     :param model: The model with fine-tuned parameters that has not been fit on any data.
     :param X_train: The predictors in training set.
     :param y_train: The labels in training set.
@@ -52,9 +56,10 @@ def measure_acc_train(model, X_train, y_train):
     return round(acc_train, 2)
 
 
-# Measure the accuracy on test set.
 def measure_acc_test(model, X_test, y_test):
     """
+    Measure the accuracy on test set.
+
     :param model: The model with fine-tuned parameters and has been fit on training set.
     :param X_test: The predictors in test set.
     :param y_test: The labels in test set.
