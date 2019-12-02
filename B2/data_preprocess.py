@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 
 
-# Resize the width of an image and its height in proportion.
 def resize_image(resized_width, img):
     """
+    Resize the width of an image and its height in proportion.
+
     :param resized_width: The width of an image after being resized.
     :param img: An Image object.
     :return: The Image object resized.
@@ -16,9 +17,10 @@ def resize_image(resized_width, img):
     return img
 
 
-# Converts an image to an array stored as a DataFrame.
 def image_to_px(img):
     """
+    Converts an image to an array stored as a DataFrame.
+
     :param img: An Image object.
     :return: The numeric representation of an image stored as a DataFrame.
     """
@@ -26,8 +28,12 @@ def image_to_px(img):
     return px
 
 
-# Crop the face just at "eye" position, and export these "eye" images as predictors.
 def eye_crop():
+    """
+    Crop the face just at "eye" position, and export these "eye" images as predictors.
+
+    :return: a DataFrame including all predictors.
+    """
     img_source = '../Datasets/cartoon_set/img/'
     img_suffix = '.png'
     save_path = '../Datasets/cartoon_set_b2/predictors_eye.csv'
@@ -39,11 +45,16 @@ def eye_crop():
         img_px = image_to_px(img)
         px = px.append(img_px, ignore_index=True)
     px.to_csv(save_path, index=False)
-    return 0
+    return px
 
 
-# Detect outliers (wearing sunglasses).
 def detect_anomaly(predictors):
+    """
+    Detect outliers (wearing sunglasses).
+
+    :param predictors: predictors in original dataset.
+    :return: A list including all outliers' index.
+    """
     anomaly_list = []
     for i in range(predictors.shape[0]):
         temp = 0
@@ -56,13 +67,14 @@ def detect_anomaly(predictors):
     return anomaly_list
 
 
-# Remove outliers from the original dataset and generate a new dataset.
 def remove_anomaly(anomaly_list, predictors, labels):
     """
+    Remove outliers from the original dataset and generate a new dataset.
+
     :param anomaly_list: A list includes all outliers' index.
     :param predictors: All predictors from the original dataset.
     :param labels: All labels from the original dataset.
-    :return: 0
+    :return: Predictors and labels after all anomalies are removed.
     """
     labels = pd.DataFrame(labels)
     predictors_normal = pd.DataFrame()
@@ -73,12 +85,13 @@ def remove_anomaly(anomaly_list, predictors, labels):
             labels_normal = labels_normal.append(labels[labels.index == i], ignore_index=True)
     predictors_normal.to_csv('../Datasets/cartoon_set_b2/predictors_eye_normal.csv', index=False)
     labels_normal.to_csv('../Datasets/cartoon_set_b2/labels_eye_normal.csv', index=False)
-    return 0
+    return predictors_normal, labels_normal
 
 
-# Load predictors and labels from .csv file.
 def load_data():
     """
+    Load predictors and labels from .csv file.
+
     :return: All predictors and labels in a dataset.
     """
     predictors_path = '../Datasets/cartoon_set_b2/predictors_eye.csv'
@@ -88,9 +101,10 @@ def load_data():
     return predictors, labels
 
 
-# Load predictors and labels after the anomaly removal from .csv file.
 def load_normal_data():
     """
+    Load predictors and labels after the anomaly removal from .csv file.
+
     :return: All predictors and labels in a dataset.
     """
     predictors_path = 'Datasets/cartoon_set_b2/predictors_eye_normal.csv'
@@ -100,9 +114,10 @@ def load_normal_data():
     return predictors, labels
 
 
-# Split the dataset as training set, validation set and test set in given ratio.
 def train_val_test_split(predictors, labels, test_ratio, val_ratio):
     """
+    Split the dataset as training set, validation set and test set in given ratio.
+
     :param predictors: All predictors in a dataset.
     :param labels: All labels in a dataset.
     :param test_ratio: The ratio of test set to the whole dataset.
@@ -128,9 +143,10 @@ def train_val_test_split(predictors, labels, test_ratio, val_ratio):
     return [X_train, y_train], [X_val, y_val], [X_test, y_test]
 
 
-# Rearrange new training set and validation set for each cross-validation.
 def create_cvset(X_train, y_train, X_val, y_val, folds, i):
     """
+    Rearrange new training set and validation set for each cross-validation.
+
     :param X_train: Predictors in training set.
     :param y_train: Labels in training set.
     :param X_val: Predictors in validation set.
