@@ -70,7 +70,7 @@ If you cannot run it successfully after many tries, drop me an email.
 
 ## Required Packages
 
-The project requires following packages and their dependencies, do check before a run.
+The project requires following packages and their dependencies, do check before running.
 
 - Numpy 1.16.2
 - Pandas 0.23.4 
