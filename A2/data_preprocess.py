@@ -5,9 +5,10 @@ from imgaug import augmenters as iaa
 from keras.utils.np_utils import to_categorical
 
 
-# Resize the width of an image and its height in proportion.
 def resize_image(resized_width, img):
     """
+    Resize the width of an image and its height in proportion.
+
     :param resized_width: The width of an image after being resized.
     :param img: An Image object.
     :return: The Image object resized.
@@ -18,9 +19,10 @@ def resize_image(resized_width, img):
     return img
 
 
-# Converts an image to an array stored as a DataFrame.
 def image_to_px(img):
     """
+    Converts an image to an array stored as a DataFrame.
+
     :param img: An Image object.
     :return: The numeric representation of an image stored as a DataFrame.
     """
@@ -28,8 +30,12 @@ def image_to_px(img):
     return px
 
 
-# Shrink images to the shape of 73*60*3.
 def shrink_image():
+    """
+    Shrink images to the shape of 73*60*3.
+
+    :return: predictors after being shrunk.
+    """
     img_source = '../Datasets/celeba/img/'
     img_suffix = '.jpg'
     save_path = '../Datasets/celeba_set_a2/predictors_shrink.csv'
@@ -40,58 +46,49 @@ def shrink_image():
         img_px = image_to_px(img)
         px = px.append(img_px, ignore_index=True)
     px.to_csv(save_path, index=False)
-    return 0
+    return px
 
 
-# Data augmentation via flipping an image horizontally.
-def data_augmentation_flip(img):
+def data_augmentation(img):
     """
+    Data augmentation via flipping an image horizontally.
+
     :param img: An Image object.
     :return: A new image represented by a ndarray.
     """
     aug = iaa.Sequential([
         iaa.Fliplr(1.0),
-        # iaa.Crop(percent=(0, 0.2)
+        # iaa.Crop(percent=(0, 0.2),
+        # iaa.GaussianBlur(1),
+        # iaa.Crop(percent=(0, 0.2),
+        # iaa.Affine(rotate=(-10, 10))
     ])
-    img_aug = aug.augment_image(np.array(img))
+    img_aug = aug.augment_image(img)
     return img_aug
 
 
-# Export factitious data as .csv file.
-def flip_image():
-    img_source = '../Datasets/celeba/img/'
-    img_suffix = '.jpg'
-    save_path = '../Datasets/celeba_set_a2/predictors_flip.csv'
-    px = pd.DataFrame()
-    for i in range(5000):
-        img = Image.open(img_source + str(i) + img_suffix)
-        img = resize_image(60, img)
-        img_aug = data_augmentation_flip(img)
-        img_px = image_to_px(img_aug)
-        px = px.append(img_px, ignore_index=True)
-    px.to_csv(save_path, index=False)
-    return 0
+def aug_trainset(X_train):
+    """
+    Export factitious data as .csv file.
+
+    :param X_train: Predictors of training set.
+    :return: factitious predictors.
+    """
+    save_path = '../Datasets/celeba_set_a2/X_train_flip.csv'
+    X_train_aug = pd.DataFrame()
+    X_train = np.array(X_train).reshape(-1, 73, 60, 3)
+    for i in range(X_train.shape[0]):
+        aug = data_augmentation(X_train[i])
+        aug = pd.DataFrame(aug.reshape(1, -1))
+        X_train_aug = X_train_aug.append(aug, ignore_index=True)
+    X_train_aug.to_csv(save_path, index=False)
+    return X_train_aug
 
 
-# Export factitious data as .csv file.
-def crop_image():
-    img_source = '../Datasets/celeba/img/'
-    img_suffix = '.jpg'
-    save_path = '../Datasets/celeba_set_a2/predictors_crop.csv'
-    px = pd.DataFrame()
-    for i in range(5000):
-        img = Image.open(img_source + str(i) + img_suffix)
-        img = img.crop((50, 80, 150, 180))
-        img_aug = img.resize((60, 73))
-        img_px = image_to_px(img_aug)
-        px = px.append(img_px, ignore_index=True)
-    px.to_csv(save_path, index=False)
-    return 0
-
-
-# Load predictors and labels from .csv file.
 def load_data():
     """
+    Load predictors and labels from .csv file.
+
     :return: All predictors and labels in a dataset.
     """
     predictors_path = 'Datasets/celeba_set_a2/predictors_shrink.csv'
@@ -101,33 +98,21 @@ def load_data():
     return predictors, labels
 
 
-# Load factitious predictors and labels from .csv file.
-def load_aug_flip():
+def load_train_aug():
     """
-    :return: All predictors and labels in a dataset.
+    Load factitious predictors and labels from .csv file.
+
+    :return: factitious predictors.
     """
-    predictors_path = 'Datasets/celeba_set_a2/predictors_flip.csv'
-    labels_path = 'Datasets/celeba/labels.csv'
+    predictors_path = 'Datasets/celeba_set_a2/X_train_flip.csv'
     predictors = pd.read_csv(predictors_path)
-    labels = pd.read_csv(labels_path, delimiter='\t')['smiling']
-    return predictors, labels
+    return predictors
 
 
-# Load factitious predictors and labels from .csv file.
-def load_aug_crop():
-    """
-    :return: All predictors and labels in a dataset.
-    """
-    predictors_path = 'Datasets/celeba_set_a2/predictors_crop.csv'
-    labels_path = 'Datasets/celeba/labels.csv'
-    predictors = pd.read_csv(predictors_path)
-    labels = pd.read_csv(labels_path, delimiter='\t')['smiling']
-    return predictors, labels
-
-
-# Split the dataset as training set, validation set and test set in given ratio.
 def train_val_test_split(predictors, labels, test_ratio, val_ratio):
     """
+    Split the dataset as training set, validation set and test set in given ratio.
+
     :param predictors: All predictors in a dataset.
     :param labels: All labels in a dataset.
     :param test_ratio: The ratio of test set to the whole dataset.
@@ -150,19 +135,13 @@ def train_val_test_split(predictors, labels, test_ratio, val_ratio):
     y_train = y_temp.iloc[shuffled[val_size:]]
     y_val = y_temp.iloc[shuffled[:val_size]]
 
-    X_train_flip, y_train_flip = load_aug_flip()
-    X_train = X_train.append(X_train_flip, ignore_index=True)
-    y_train = y_train.append(y_train_flip, ignore_index=True)
-    X_train_crop, y_train_crop = load_aug_crop()
-    X_train = X_train.append(X_train_crop, ignore_index=True)
-    y_train = y_train.append(y_train_crop, ignore_index=True)
-
     return [X_train, y_train], [X_val, y_val], [X_test, y_test]
 
 
-# prepare data before fitting a CNN model.
 def data_prepare(X_train, y_train, X_val, y_val, X_test, y_test):
     """
+    Prepare data before fitting a CNN model.
+
     :param data_train: Predictors and labels in training set.
     :param data_val: Predictors and labels in validation set.
     :param data_test: Predictors and labels in test set.
