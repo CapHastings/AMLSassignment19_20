@@ -16,23 +16,29 @@ codes of each task are placed in A1, A2, B1 and B2 folder respectively and corre
 The directory tree is presented below: 
 
 ```
+.
 ├── A1
-│   ├── a1.py
-│   ├── data_preprocess.py
-│   └── model_tuning.py
+│   ├── a1.py
+│   ├── data_preprocess.py
+│   ├── model_tuning.py
+│   └── plot.py
 ├── A2
-│   ├── a2.py
-│   ├── data_preprocess.py
-│   ├── model_tuning.py
-│   └── pre-trained_model.h5
+│   ├── a2.py
+│   ├── best_model.h5
+│   ├── data_preprocess.py
+│   ├── model_tuning.py
+│   ├── plot.py
+│   └── pre-trained_model.h5
 ├── B1
-│   ├── b1.py
-│   ├── data_preprocess.py
-│   └── model_tuning.py
+│   ├── b1.py
+│   ├── data_preprocess.py
+│   ├── model_tuning.py
+│   └── plot.py
 ├── B2
-│   ├── b2.py
-│   ├── data_preprocess.py
-│   └── model_tuning.py
+│   ├── b2.py
+│   ├── data_preprocess.py
+│   ├── model_tuning.py
+│   └── plot.py
 ├── Datasets
 │   ├── cartoon_set
 │   ├── cartoon_set_b1
@@ -49,7 +55,7 @@ each python file with specific purposes is placed orderly, and python files with
 - ```data_preprocess.py```: process data before being fit by a model, including basic functions of image preprocessing, data augmentation, the loading and export of data, etc. 
 - ```model_tuning.py```: include functions of fine-tuning the selected model via cross-validation, the train/test accuracy calculation.
 - ```a1.py (a2. py, etc.)```: include a class whose objects can invoke the functions of above two python files.
-- ```pre-trained_model.h5```: a pre-trained CNN model.
+- ```plot.py```: plot learning curves.
 - ```main.py```: integrate four tasks in one—load datasets and train the models of four tasks, and print the train/test accuracy respectively.
 
 ## Usage
@@ -60,11 +66,11 @@ each python file with specific purposes is placed orderly, and python files with
 2. Change your current working directory to the project in Terminal: ```$ cd /AMLSassignment19_20-master```	
 3. Run ```$ python main.py```
 
-If you cannot run it successfully after many tries, feel free to contact me by email.
+If you cannot run it successfully after many tries, drop me an email.
 
 ## Required Packages
 
-The project requires the installation of following packages and their dependencies, do check before a run.
+The project requires following packages and their dependencies, do check before a run.
 
 - Numpy 1.16.2
 - Pandas 0.23.4 
