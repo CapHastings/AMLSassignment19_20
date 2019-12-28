@@ -9,7 +9,7 @@ The project includes four tasks:
 - B1: Face shape recognition on cartoon_set dataset.
 - B2: Eye color recognition on cartoon_set dataset.
 
-codes of each task are placed in A1, A2, B1 and B2 folder respectively and corresponding datasets are also stored in Datasets folder. 
+codes of each task are placed in A1, A2, B1 and B2 folder respectively, and corresponding datasets are also stored in Datasets folder. 
 
 ## Directory Tree
 
@@ -54,13 +54,13 @@ each python file with specific purposes is placed orderly, and python files with
 
 - ```data_preprocess.py```: process data before being fit by a model, including basic functions of image preprocessing, data augmentation, the loading and export of data, etc. 
 - ```model_tuning.py```: include functions of fine-tuning the selected model via cross-validation, the train/test accuracy calculation.
-- ```a1.py (a2. py, etc.)```: include a class whose objects can invoke the functions of above two python files.
+- ```a1.py (a2. py, etc.)```: include a class whose objects can invoke the functions of the above two python files.
 - ```plot.py```: plot learning curves.
-- ```main.py```: integrate four tasks in one—load datasets and train the models of four tasks, and print the train/test accuracy respectively.
+- ```main.py```: integrate four tasks in one—load datasets and train the models of four tasks, and print the train/test accuracy, respectively.
 
 ## Usage
 
-**Warm Reminder:** The project interpreter is Python 3.7, so errors may occur in Python 2.x. The relative path is written as macOS path, please make minor amendments if you are using Windows. The location of datasets and python files should be entirely identical to the directory tree.
+**Warm Reminder:** The project interpreter is Python 3.7, so errors may occur in Python 2.x. The relative path is written as macOS path, so please make minor amendments if you are using Windows. The location of datasets and python files should be entirely identical to the directory tree.
 
 1. Download datasets from [here](https://liveuclac-my.sharepoint.com/:u:/g/personal/uceepz0_ucl_ac_uk/ETa2W6cIuEZDgY-CCApBzVEBjGVlpueyplPIQ74ICzKs3Q?e=7L0O03), unzip and move the whole folder "Datasets" to the location shown in the directory tree.
 2. Change your current working directory to the project in Terminal: ```$ cd /AMLSassignment19_20-master```	
